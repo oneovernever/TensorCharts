@@ -1,0 +1,66 @@
+var N_LOOKBACK = 11
+var MEDAIN_MULTIPLICATOR = 2
+
+var lows = []
+var highs = []
+
+var volDeltaMedian = []
+
+for(var i = 0; i < chartData.length; i++){
+  var candleData = chartData[i]
+  var volumeDelta = Math.abs(candleData.buyVolume - candleData.sellVolume)
+  volDeltaMedian.push(volumeDelta)
+}
+
+var volLimit = statistics.median(volDeltaMedian) * MEDAIN_MULTIPLICATOR
+console.log(volLimit)    
+
+for(var i = 0; i < chartData.length;i++){
+    var candleData = chartData[i]
+    
+    lows.push(candleData.low)
+    highs.push(candleData.high)
+  
+    if(lows.length < N_LOOKBACK){
+        continue
+    } else if(lows.length > N_LOOKBACK){
+         lows.shift()
+          highs.shift()
+    }
+
+  
+   
+    var volDelta =  candleData.buyVolume - candleData.sellVolume
+   
+    if(Math.abs(volDelta) < volLimit){
+        continue 
+    }
+  
+    var x = candleData.dateInt
+   
+    var isLowest = candleData.low <= Math.min(...lows)
+    var isHighest = candleData.high >= Math.max(...highs)
+    if(volDelta<0 && isHighest && !isLowest){
+        showAnnotation({
+          x: x,
+          price: candleData.high * 1.01,
+          fontFamily: "Glyphicons Halflings",
+          fontSize: 20,
+          fill: "#ff0000",
+          opacity: 0.8,
+          text: "v",
+        }) 
+     } else if(volDelta>0 && isLowest && !isHighest ){
+         showAnnotation({
+           x: x,
+           price: candleData.low * 0.99,
+           fontFamily: "Glyphicons Halflings",
+       fontSize: 20,
+       fill: "#00ff00" ,
+       opacity: 0.8,
+       text: "^",
+        })
+     }
+    
+   
+}

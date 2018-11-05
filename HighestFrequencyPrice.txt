@@ -1,0 +1,16 @@
+//In the last 20 minutes, the price with the highest frequency trades.
+console.log(trades)
+var prices = []
+for(var i=0; i < trades.length; i++){
+
+  //Making sure output is in Float variable type.
+  var price = parseFloat(trades[i].Price)
+prices.push(price)
+ 
+//console.log(price)
+  
+}
+var mode = statistics.mode(prices)
+//console.log(mode)
+
+speak("Highest Frequency Price is " + mode)

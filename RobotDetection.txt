@@ -1,0 +1,35 @@
+
+var MIN_SEQ_COUNT = 3;
+
+if(self.lastTradeSeq==undefined && trades.length!=0){
+    self.lastTradeSeq = trades[trades.length-1].Seq;
+}
+
+var lastTradeAmount = 0;
+var sameAmountTradesSequenceCount = 1
+
+for(var i = 0; i< trades.length; i++){
+        if(trades[i].Seq == self.lastTradeSeq){
+            break;  
+        }
+        
+        var amount = trades[i].Amount;
+
+        if(lastTradeAmount == amount){
+            sameAmountTradesSequenceCount++;
+        } else{
+            
+            if(sameAmountTradesSequenceCount >= MIN_SEQ_COUNT ){
+                speak("robot detected")
+            }
+        
+            lastTradeAmount = amount;
+            sameAmountTradesSequenceCount = 1
+        }  		
+
+    }
+
+if(trades.length > 0){
+    self.lastTradeSeq = trades[0].Seq; 
+}
+    
